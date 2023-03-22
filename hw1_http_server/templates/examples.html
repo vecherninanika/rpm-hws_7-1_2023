@@ -1,0 +1,32 @@
+<html lang="en">
+    <head>
+        <title>Examples</title>
+    </head>
+    <body>
+        <br>
+        <form action="/examples" name="examples_form" id="examples_form">
+            <label for="name">Name</label><br>
+            <input type="text" id="name" name="name">
+            <br><br>
+            <label for="age">Age</label><br>
+            <input type="text" id="age" name="age">
+            <br><br>
+            <input type="submit">
+            <script>
+                var form = document.getElementById("examples_form")
+                form.addEventListener('submit', function () {{
+                    var all_inputs = form.getElementsByTagName('input');
+                    for ( var i = 0; i < all_inputs.length; i++) {{
+                        var input = all_inputs[i];
+                        if (input.name && !input.value) {{
+                            input.name = '';
+                        }}
+                    }}
+                }});
+            </script>
+        </form>
+        <h4>Examples of requests and answers: {names}</h4>
+        <h4>({count} requests)</h4>
+        <a href="/">Back to main</a>
+    </body>
+</html>

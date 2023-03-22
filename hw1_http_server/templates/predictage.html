@@ -1,0 +1,27 @@
+<html lang="en">
+    <head>
+        <title>Predict Age</title>
+    </head>
+    <body>
+        <h2>
+            Enter your name and get a predicted age
+        </h2>
+        <br><br>
+        <form action="/predictage" name="predict_age_form" id="predict_age_form">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name">
+            <br><br>
+            <input type="submit">
+        </form>
+        <h4>
+            Name: {name}
+        </h4>
+        <h4>
+            Predicted age: {age}
+        </h4>
+        <h4>
+            Request number: {count}
+        </h4>
+        <a href="/">Back to main</a>
+    </body>
+</html>
