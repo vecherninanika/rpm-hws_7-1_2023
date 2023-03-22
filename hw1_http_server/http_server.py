@@ -46,7 +46,7 @@ class CustomHandler(BaseHTTPRequestHandler):
             possible_attrs = None
         questionmark_place = self.path.find('?')
         if '?' in self.path and questionmark_place != len(self.path) - 1:
-            query_data = self.path[questionmark_place+1:].split('&')
+            query_data = self.path[questionmark_place + 1:].split('&')
             query_attr_value = [attr_value.split(
                 '=') for attr_value in query_data]
             query_dict = {attr: int(value) if value.isdigit(
@@ -59,8 +59,6 @@ class CustomHandler(BaseHTTPRequestHandler):
                         f'{__name__} has unknown attributes: {not_possible}')
             return query_dict
         return None
-
-
 
     # GET POST PUT DELETE :
 
@@ -92,7 +90,7 @@ class CustomHandler(BaseHTTPRequestHandler):
                 return CREATED, f'{self.command} {answer}'
             return BAD_REQUEST, f'Required keys to add: {EXAMPLES_REQ_ATTRS}'
         return NO_CONTENT, f'Request data for {self.command} not found'
-    
+
     def put(self):
         if self.path.startswith(EXAMPLES):
             request_data = self.get_request_json()

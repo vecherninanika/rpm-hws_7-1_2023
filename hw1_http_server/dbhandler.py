@@ -15,6 +15,7 @@ PG_HOST = getenv('PG_HOST')
 def is_num(value: any):
     return isinstance(value, (int, float))
 
+
 class InvalidQuery(Exception):
     def __init__(self, msg):
         self.msg = msg
@@ -23,9 +24,11 @@ class InvalidQuery(Exception):
         classname = self.__class__.__name__
         return f'\n {classname} Error: {self.msg}\n'
 
+
 class DbHandler:
 
-    db_connection = psycopg2.connect(dbname=PG_DBNAME, host=PG_HOST, port=PG_PORT, user=PG_USER, password=PG_PASSWORD)
+    db_connection = psycopg2.connect(dbname=PG_DBNAME, host=PG_HOST, port=PG_PORT,
+                                     user=PG_USER, password=PG_PASSWORD)
     db_cursor = db_connection.cursor()
 
     @classmethod
@@ -34,7 +37,7 @@ class DbHandler:
         examples = cls.db_cursor.fetchall()
         return {
             'names': list_to_view(examples),
-            'count': len(examples)  
+            'count': len(examples)
         }
 
     @classmethod
