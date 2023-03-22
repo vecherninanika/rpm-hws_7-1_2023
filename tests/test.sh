@@ -8,7 +8,7 @@ python3.10 tests/setup_db.py
 
 # server start
 echo "Starting the server"
-python3.10 main.py &
+python3.10 hw1_http_server/main.py &
 
 # real tests
 sleep 2
