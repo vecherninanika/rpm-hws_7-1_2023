@@ -1,3 +1,4 @@
+"""File with database managing utils."""
 import psycopg2
 from dotenv import load_dotenv
 from os import getenv
@@ -17,6 +18,7 @@ def is_num(value: any):
 
 
 class InvalidQuery(Exception):
+    """Error class for server."""
     def __init__(self, msg):
         self.msg = msg
 
@@ -26,6 +28,7 @@ class InvalidQuery(Exception):
 
 
 class DbHandler:
+    """Class which sends queries to database."""
 
     db_connection = psycopg2.connect(dbname=PG_DBNAME, host=PG_HOST, port=PG_PORT,
                                      user=PG_USER, password=PG_PASSWORD)
