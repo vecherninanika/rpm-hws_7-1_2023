@@ -38,16 +38,13 @@ class CustomHandler(BaseHTTPRequestHandler):
         questionmark_place = self.path.find('?')
         if '?' in self.path and questionmark_place != len(self.path) - 1:
             query_data = self.path[questionmark_place + 1:].split('&')
-            query_attr_value = [attr_value.split(
-                '=') for attr_value in query_data]
-            query_dict = {attr: int(value) if value.isdigit(
-            ) else value for attr, value in query_attr_value}
+            query_attr_value = [attr_value.split('=') for attr_value in query_data]
+            query_dict = {attr: int(value) if value.isdigit() \
+                          else value for attr, value in query_attr_value}
             if possible_attrs:
-                not_possible = list(
-                    filter(lambda x: x not in possible_attrs, query_dict.keys()))
+                not_possible = list(filter(lambda attr: attr not in possible_attrs, query_dict.keys()))
                 if not_possible:
-                    raise InvalidQuery(
-                        f'{__name__} has unknown attributes: {not_possible}')
+                    raise InvalidQuery(f'{__name__} has unknown attributes: {not_possible}')
             return query_dict
         return None
 
@@ -77,7 +74,8 @@ class CustomHandler(BaseHTTPRequestHandler):
                 if attr not in EXAMPLES_ATTRS:
                     return NOT_IMPLEMENTED, f'Examples do not have attribute: {attr}'
             if all([req_attr in request_data for req_attr in EXAMPLES_REQ_ATTRS]):
-                return CREATED, f'{self.command} OK' if DbHandler.insert(request_data) else BAD_REQUEST, f'{self.command} FAIL'
+                return CREATED, f'{self.command} OK' if DbHandler.insert(request_data) \
+                    else BAD_REQUEST, f'{self.command} FAIL'
             return BAD_REQUEST, f'Required keys to add: {EXAMPLES_REQ_ATTRS}'
         return NO_CONTENT, f'Request data for {self.command} not found'
 
@@ -88,8 +86,7 @@ class CustomHandler(BaseHTTPRequestHandler):
                 return BAD_REQUEST, f'No request data provided by {self.command}'
             query = self.parse_query()
             if query:
-                not_possible = list(
-                    filter(lambda x: x not in EXAMPLES_ATTRS, query.keys()))
+                not_possible = list(filter(lambda attr: attr not in EXAMPLES_ATTRS, query.keys()))
                 if not_possible:
                     return NOT_IMPLEMENTED, f'students do not have attributes: {not_possible}'
             try:
@@ -119,7 +116,8 @@ class CustomHandler(BaseHTTPRequestHandler):
     def choose_method(self):
         methods = {'POST': self.post,
                    'PUT': self.put,
-                   'DELETE': self.delete}
+                   'DELETE': self.delete
+                   }
         if self.command == 'GET':
             self.get()
             return

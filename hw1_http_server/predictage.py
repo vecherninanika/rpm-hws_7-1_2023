@@ -1,12 +1,13 @@
 """Get response from a foreign API."""
 import requests
-from config import AGIFY_API_URL
+from config import AGIFY_API_URL, OK
 
 
 def predictage(query: dict) -> dict:
     items_dict = {'name': 'Unable to get name from query, defaults to Matthew',
-                  'age': None,
-                  'count': None}
+    'age': None,
+    'count': None
+    }
     try:
         name = query.get('name')
     except Exception:
@@ -16,7 +17,7 @@ def predictage(query: dict) -> dict:
         params = {'name': name}
         items_dict['name'] = name
     response = requests.get(AGIFY_API_URL, params=params)
-    if response.status_code != 200:
+    if response.status_code != OK:
         print(f'{__name__}: Failed with status code {response.status_code}')
         return items_dict
     response_data = response.json()

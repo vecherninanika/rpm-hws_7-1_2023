@@ -39,9 +39,9 @@ GET_TOKEN = "SELECT token FROM token WHERE username='{username}'"
 INSERT = 'INSERT INTO examples ({keys}) VALUES ({values})'
 UPDATE = 'UPDATE examples SET {request}'
 DELETE = 'DELETE FROM examples '
-EXAMPLES_ATTRS = ['name', 'age']
-EXAMPLES_REQ_ATTRS = ['name']
-PREDICTAGE_ATTRS = ['name']
+EXAMPLES_ATTRS = ('name', 'age')
+EXAMPLES_REQ_ATTRS = ('name',)
+PREDICTAGE_ATTRS = ('name',)
 
 # page str to byte coding
 CODING = 'KOI8-R'

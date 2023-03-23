@@ -32,7 +32,7 @@ class InvalidQuery(Exception):
 class DbHandler:
     """Class which sends queries to database."""
 
-    db_connection = psycopg2.connect(dbname=PG_DBNAME, host=PG_HOST, port=PG_PORT,
+    db_connection = psycopg2.connect(dbname=PG_DBNAME, host=PG_HOST, port=PG_PORT, \
                                      user=PG_USER, password=PG_PASSWORD)
     db_cursor = db_connection.cursor()
 
@@ -72,12 +72,12 @@ class DbHandler:
 
     @classmethod
     def update(cls, data: dict, where: dict) -> bool:
-        for key in data.keys():
-            if key == 'name' and str(data[key]).isdigit():
+        for data_key in data.keys():
+            if data_key == 'name' and str(data[data_key]).isdigit():
                 raise InvalidQuery('Name should not be a number')
-            if key == 'age' and not str(data[key]).isdigit():
+            if data_key == 'age' and not str(data[data_key]).isdigit():
                 raise InvalidQuery('Age should be a number!')
-        req = ', '.join([f"{key}={val}" if is_num(val) else f"{key}='{val}'" for key, val in data.items()])
+        req = ', '.join([f"{data_key}={data_val}" if is_num(data_val) else f"{data_key}='{data_val}'" for data_key, data_val in data.items()])
         try:
             cls.db_cursor.execute(cls.query_request(UPDATE.format(request=req), where))
         except Exception as error:
