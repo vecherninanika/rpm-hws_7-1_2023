@@ -4,17 +4,8 @@ from views import examples_html, predictage_html, mainpage_html, errorpage_html
 from dbhandler import DbHandler
 from predictage import predictage
 import json
+from dbhandler import InvalidQuery
 
-# просто класс с ошибкой:
-
-
-class InvalidQuery(Exception):
-    def __init__(self, msg):
-        self.msg = msg
-
-    def __str__(self):
-        classname = self.__class__.__name__
-        return f'\n {classname} Error: {self.msg}\n'
 
 
 class CustomHandler(BaseHTTPRequestHandler):

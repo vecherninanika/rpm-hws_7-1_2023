@@ -1,4 +1,3 @@
-"""File with database managing utils."""
 import psycopg2
 from dotenv import load_dotenv
 from os import getenv
@@ -38,6 +37,7 @@ class DbHandler:
     def get_data(cls, req_conds: dict = None) -> dict:
         cls.db_cursor.execute(DbHandler.query_request(SELECTOR, req_conds) if req_conds else SELECTOR)
         examples = cls.db_cursor.fetchall()
+        examples = [example[1:] for example in examples]  # чтобы на сайт не выводит id
         return {
             'names': list_to_view(examples),
             'count': len(examples)
