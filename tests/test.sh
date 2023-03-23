@@ -11,7 +11,6 @@ echo "Starting the server"
 cd hw1_http_server/
 python3.10 main.py &
 
-
 # real tests
 sleep 2
 
@@ -40,9 +39,10 @@ check_code $get_code $OK
 
 echo "POST request:"
 
+echo "token $token"
 post_code=`curl -s -o /dev/null \
     -X POST \
-    -d '{"name": "a1b2c3d4", "age":1}' \
+    -d '{"name": "a1b2c3d4", "age": 1}' \
     -H "Authorization:admin {$token}"\
     -w %{http_code} \
     http://127.0.0.1:8001/examples`

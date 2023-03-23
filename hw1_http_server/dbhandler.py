@@ -59,6 +59,8 @@ class DbHandler:
                 raise InvalidQuery('Name should not be a number!')
             if key == 'age' and not str(insert_data[key]).isdigit():
                 raise InvalidQuery('Age should be a number!')
+            if key == 'age' and insert_data[key] < 0:
+                raise InvalidQuery('Age should be more than zero!')
         values = [insert_data[key] for key in keys]
         attrs = ', '.join(keys)
         values = ', '.join([str(val) if is_num(val) else f"'{val}'" for val in values])
