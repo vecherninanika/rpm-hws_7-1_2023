@@ -1,3 +1,4 @@
+"""Set up the database."""
 from psycopg2 import connect
 from dotenv import load_dotenv
 from os import getenv

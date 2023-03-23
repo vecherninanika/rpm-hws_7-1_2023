@@ -1,3 +1,5 @@
+"""File with database managing tools."""
+
 import psycopg2
 from dotenv import load_dotenv
 from os import getenv
@@ -12,16 +14,17 @@ PG_PASSWORD = getenv('PG_PASSWORD')
 PG_HOST = getenv('PG_HOST')
 
 
-def is_num(value: any):
+def is_num(value: any) -> bool:
     return isinstance(value, (int, float))
 
 
 class InvalidQuery(Exception):
     """Error class for server."""
-    def __init__(self, msg):
+
+    def __init__(self, msg: str) -> None:
         self.msg = msg
 
-    def __str__(self):
+    def __str__(self) -> str:
         classname = self.__class__.__name__
         return f'\n {classname} Error: {self.msg}\n'
 
@@ -44,7 +47,8 @@ class DbHandler:
         }
 
     @classmethod
-    def is_valid_token(cls, username: str, req_token: str):
+    def is_valid_token(cls, username: str, req_token: str) -> bool:
+
         cls.db_cursor.execute(GET_TOKEN.format(username=username))
         db_token = cls.db_cursor.fetchone()
         if db_token:
@@ -52,7 +56,7 @@ class DbHandler:
         return False
 
     @staticmethod
-    def compose_insert(insert_data: dict):
+    def compose_insert(insert_data: dict) -> str:
         keys = tuple(insert_data.keys())
         for key in keys:
             if key == 'name' and str(insert_data[key]).isdigit():
@@ -67,7 +71,7 @@ class DbHandler:
         return INSERT.format(keys=attrs, values=values)
 
     @classmethod
-    def update(cls, data: dict, where: dict):
+    def update(cls, data: dict, where: dict) -> bool:
         for key in data.keys():
             if key == 'name' and str(data[key]).isdigit():
                 raise InvalidQuery('Name should not be a number')
@@ -83,7 +87,7 @@ class DbHandler:
         return bool(cls.db_cursor.rowcount)
 
     @classmethod
-    def insert(cls, examples_data: dict):
+    def insert(cls, examples_data: dict) -> bool:
         try:
             cls.db_cursor.execute(cls.compose_insert(examples_data))
         except Exception as error:
@@ -93,7 +97,7 @@ class DbHandler:
         return bool(cls.db_cursor.rowcount)
 
     @classmethod
-    def delete(cls, req_conds: dict):
+    def delete(cls, req_conds: dict) -> bool:
         try:
             cls.db_cursor.execute(cls.query_request(DELETE, req_conds))
         except Exception as error:
@@ -103,7 +107,7 @@ class DbHandler:
         return bool(cls.db_cursor.rowcount)
 
     @staticmethod
-    def query_request(request: str, req_conds: dict):
+    def query_request(request: str, req_conds: dict) -> str:
         conditions = []
         for attr, value in req_conds.items():
             to_add = f'{attr}={value}' if isinstance(value, (int, float)) else f"{attr}='{value}'"

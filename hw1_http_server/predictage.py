@@ -1,8 +1,9 @@
+"""Get response from a foreign API."""
 import requests
 from config import AGIFY_API_URL
 
 
-def predictage(query: dict):
+def predictage(query: dict) -> dict:
     items_dict = {'name': 'Unable to get name from query, defaults to Matthew',
                   'age': None,
                   'count': None}

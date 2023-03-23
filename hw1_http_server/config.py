@@ -1,3 +1,5 @@
+"""File with needed constant variables."""
+
 # server host and port
 HOST = '127.0.0.1'
 PORT = 8001
@@ -8,10 +10,10 @@ EXAMPLES = '/examples'
 
 # templates paths
 TEMPLATES = 'templates/'
-MAIN_PAGE = f'{TEMPLATES}mainpage.html'
-PREDICTAGE_TEMPLATE = f'{TEMPLATES}predictage.html'
-EXAMPLES_TEMPLATE = f'{TEMPLATES}examples.html'
-ERROR_PAGE = f'{TEMPLATES}error.html'
+MAIN_PAGE = '{0}mainpage.html'.format(TEMPLATES)
+PREDICTAGE_TEMPLATE = '{0}predictage.html'.format(TEMPLATES)
+EXAMPLES_TEMPLATE = '{0}examples.html'.format(TEMPLATES)
+ERROR_PAGE = '{0}errorpage.html'.format(TEMPLATES)
 
 # HTTP headers
 CONTENT_LENGTH = 'Content-Length'
@@ -33,7 +35,7 @@ NOT_IMPLEMENTED = 501
 
 # db requests
 SELECTOR = 'SELECT * FROM examples'
-GET_TOKEN = 'SELECT token FROM token WHERE username=\'{username}\''
+GET_TOKEN = "SELECT token FROM token WHERE username='{username}'"
 INSERT = 'INSERT INTO examples ({keys}) VALUES ({values})'
 UPDATE = 'UPDATE examples SET {request}'
 DELETE = 'DELETE FROM examples '

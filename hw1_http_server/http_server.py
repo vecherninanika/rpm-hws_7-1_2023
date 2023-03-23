@@ -1,3 +1,4 @@
+"""File with http server."""
 from http.server import BaseHTTPRequestHandler
 from config import *
 from views import examples_html, predictage_html, mainpage_html, errorpage_html
@@ -7,28 +8,27 @@ import json
 from dbhandler import InvalidQuery
 
 
-
 class CustomHandler(BaseHTTPRequestHandler):
+    """Class with customed BaseHTTPRequestHandler methods."""
 
-    # Вывести страницы:
+    # Return pages:
 
-    def examples_or_predictage(self, query):
+    def examples_or_predictage(self, query) -> str:
         if self.path.startswith(EXAMPLES):
             return examples_html(DbHandler.get_data(query))
         elif self.path.startswith(PREDICTAGE):
             return predictage_html(predictage(query))
 
-    def get_page(self):
+    def get_page(self) -> tuple:
         if self.path.startswith((EXAMPLES, PREDICTAGE)):
             try:
                 query = self.parse_query()
             except Exception as error:
                 return BAD_REQUEST, errorpage_html(error)
             return OK, self.examples_or_predictage(query)
-        # else: mainpage
         return OK, mainpage_html()
 
-    def parse_query(self):
+    def parse_query(self) -> dict | None:
         if self.path.startswith(EXAMPLES):
             possible_attrs = EXAMPLES_ATTRS
         elif self.path.startswith(PREDICTAGE):
@@ -62,13 +62,13 @@ class CustomHandler(BaseHTTPRequestHandler):
     def get(self):
         self.respond_to_client(*self.get_page())
 
-    def get_request_json(self):
+    def get_request_json(self) -> dict:
         content_length = int(self.headers.get(CONTENT_LENGTH, 0))
         if content_length:
             return json.loads(self.rfile.read(content_length).decode())
         return {}
 
-    def post(self, request_data=None):
+    def post(self) -> tuple:
         if self.path.startswith(EXAMPLES):
             request_data = self.get_request_json()
             if not request_data:
@@ -81,7 +81,7 @@ class CustomHandler(BaseHTTPRequestHandler):
             return BAD_REQUEST, f'Required keys to add: {EXAMPLES_REQ_ATTRS}'
         return NO_CONTENT, f'Request data for {self.command} not found'
 
-    def put(self):
+    def put(self) -> tuple:
         if self.path.startswith(EXAMPLES):
             request_data = self.get_request_json()
             if not request_data:
@@ -101,7 +101,7 @@ class CustomHandler(BaseHTTPRequestHandler):
                 return self.post(request_data)
             return OK, f'{self.command} OK'
 
-    def delete(self):
+    def delete(self) -> tuple:
         if self.path.startswith(EXAMPLES):
             query = self.parse_query()
             if not query:
@@ -110,7 +110,7 @@ class CustomHandler(BaseHTTPRequestHandler):
                 return OK, 'Content has been deleted'
         return NOT_FOUND, 'Content not found'
 
-    def authorization(self):
+    def authorization(self) -> bool:
         get_from_headers = self.headers.get(AUTH, '').split()
         if len(get_from_headers) == 2:
             return DbHandler.is_valid_token(get_from_headers[0], get_from_headers[1])

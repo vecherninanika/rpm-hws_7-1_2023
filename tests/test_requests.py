@@ -1,3 +1,4 @@
+"""Test the requests."""
 from requests import get
 
 
@@ -7,9 +8,9 @@ URL = 'http://127.0.0.1:8001/examples'
 headers = {
     'Authorization': 'admin {a1b2c3d4-a1b2-c3d4-e5f6-a1b2c3a1b2c3}'
 }
-data = {
-    "name": "a1b2c3d4",
-    "age": 18
+data_for_examples = {
+    'name': 'a1b2c3d4',
+    'age': 18
 }
 
 
