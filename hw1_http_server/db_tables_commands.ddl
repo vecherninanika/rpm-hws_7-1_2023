@@ -1,4 +1,6 @@
-CREATE TABLE examples (name text not null, age int);
+CREATE TABLE examples (id uuid primary key default uuid_generate_v4(),
+                       name text not null,
+                       age int);
 
 INSERT INTO examples (name, age) VALUES ('Matthew', 64), ('Valeria', 45);
 

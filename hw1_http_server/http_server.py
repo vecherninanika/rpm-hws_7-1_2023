@@ -86,8 +86,7 @@ class CustomHandler(BaseHTTPRequestHandler):
                 if attr not in EXAMPLES_ATTRS:
                     return NOT_IMPLEMENTED, f'Examples do not have attribute: {attr}'
             if all([req_attr in request_data for req_attr in EXAMPLES_REQ_ATTRS]):
-                answer = 'OK' if DbHandler.insert(request_data) else 'FAIL'
-                return CREATED, f'{self.command} {answer}'
+                return CREATED, f'{self.command} OK' if DbHandler.insert(request_data) else BAD_REQUEST, f'{self.command} FAIL'
             return BAD_REQUEST, f'Required keys to add: {EXAMPLES_REQ_ATTRS}'
         return NO_CONTENT, f'Request data for {self.command} not found'
 

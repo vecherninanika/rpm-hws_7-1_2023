@@ -26,7 +26,7 @@ jobs:
             POSTGRES_PASSWORD: change_me
             POSTGRES_DBNAME: names_hw1
             POSTGRES_USER: sirius_2023
-            POSTGRES_PORT: 5436
+            POSTGRES_PORT: 5432
             POSTGRES_HOST: 127.0.0.1
         ports:
           - 5436:5432
