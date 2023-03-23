@@ -23,13 +23,13 @@ jobs:
       postgres:
         image: postgres
         env:
-            POSTGRES_PASSWORD: change_me
-            POSTGRES_DBNAME: names_hw1
-            POSTGRES_USER: sirius_2023
+            POSTGRES_PASSWORD: test
+            POSTGRES_DBNAME: test
+            POSTGRES_USER: test
             POSTGRES_PORT: 5432
             POSTGRES_HOST: 127.0.0.1
         ports:
-          - 5436:5432
+          - 5432:5432
     steps:
     - uses: actions/checkout@v2
     - name: Установка Python
