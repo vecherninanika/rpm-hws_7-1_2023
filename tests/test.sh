@@ -8,7 +8,9 @@ python3.10 tests/setup_db.py
 
 # server start
 echo "Starting the server"
-python3.10 hw1_http_server/main.py &
+cd hw1_http_server/
+python3.10 main.py &
+
 
 # real tests
 sleep 2
@@ -32,7 +34,7 @@ echo "simple_GET request:"
 get_code=`curl -s -o /dev/null \
     -X GET \
     -w %{http_code} \
-    http://127.0.0.1:8001/students`
+    http://127.0.0.1:8001/examples`
 
 check_code $get_code $OK
 
@@ -43,17 +45,17 @@ post_code=`curl -s -o /dev/null \
     -d '{"name": "a1b2c3d4", "age":1}' \
     -H "Authorization:admin {$token}"\
     -w %{http_code} \
-    http://127.0.0.1:8001/students`
+    http://127.0.0.1:8001/examples`
 
 check_code $post_code $CREATED
 
-
+ 
 echo "query_GET request:"
 
 get_code=`curl -s -o /dev/null \
     -X GET \
     -w %{http_code} \
-    http://127.0.0.1:8001/students?fname=a1ba1b2c3d42c3d4`
+    http://127.0.0.1:8001/examples?name=a1ba1b2c3d42c3d4`
 
 check_code $get_code $OK
 
@@ -63,6 +65,6 @@ post_code=`curl -s -o /dev/null \
     -X DELETE \
     -H "Authorization:admin {$token}"\
     -w %{http_code} \
-    http://127.0.0.1:8001/students?fname=a1b2c3d4`
+    http://127.0.0.1:8001/examples?name=a1b2c3d4`
 
 check_code $post_code $OK
