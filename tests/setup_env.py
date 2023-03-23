@@ -9,7 +9,7 @@ env_consts = {
 
 def setup_env():
     lines = [f'{const}={value}\n' for const, value in env_consts.items()]
-    with open('.env', 'w') as env_file:
+    with open('./.env', 'w') as env_file:
         env_file.writelines(lines)
 
 
