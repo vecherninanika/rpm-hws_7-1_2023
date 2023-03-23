@@ -39,8 +39,10 @@ class CustomHandler(BaseHTTPRequestHandler):
         if '?' in self.path and questionmark_place != len(self.path) - 1:
             query_data = self.path[questionmark_place + 1:].split('&')
             query_attr_value = [attr_value.split('=') for attr_value in query_data]
-            query_dict = {attr: int(value) if value.isdigit() \
-                          else value for attr, value in query_attr_value}
+            query_dict = {
+                attr: int(value) if value.isdigit()
+                else value for attr, value in query_attr_value
+            }
             if possible_attrs:
                 not_possible = list(filter(lambda attr: attr not in possible_attrs, query_dict.keys()))
                 if not_possible:
@@ -74,8 +76,9 @@ class CustomHandler(BaseHTTPRequestHandler):
                 if attr not in EXAMPLES_ATTRS:
                     return NOT_IMPLEMENTED, f'Examples do not have attribute: {attr}'
             if all([req_attr in request_data for req_attr in EXAMPLES_REQ_ATTRS]):
-                return CREATED, f'{self.command} OK' if DbHandler.insert(request_data) \
-                    else BAD_REQUEST, f'{self.command} FAIL'
+                if DbHandler.insert(request_data):
+                    return CREATED, f'{self.command} OK'
+                return BAD_REQUEST, f'{self.command} FAIL'
             return BAD_REQUEST, f'Required keys to add: {EXAMPLES_REQ_ATTRS}'
         return NO_CONTENT, f'Request data for {self.command} not found'
 
@@ -114,10 +117,11 @@ class CustomHandler(BaseHTTPRequestHandler):
         return False
 
     def choose_method(self):
-        methods = {'POST': self.post,
-                   'PUT': self.put,
-                   'DELETE': self.delete
-                   }
+        methods = {
+            'POST': self.post,
+            'PUT': self.put,
+            'DELETE': self.delete
+            }
         if self.command == 'GET':
             self.get()
             return
