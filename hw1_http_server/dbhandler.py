@@ -33,12 +33,12 @@ class DbHandler:
     """Class which sends queries to database."""
 
     db_connection = psycopg2.connect(
-    dbname=PG_DBNAME,
-    host=PG_HOST,
-    port=PG_PORT,
-    user=PG_USER,
-    password=PG_PASSWORD
-    )
+                            dbname=PG_DBNAME,
+                            host=PG_HOST,
+                            port=PG_PORT,
+                            user=PG_USER,
+                            password=PG_PASSWORD
+                            )
     db_cursor = db_connection.cursor()
 
     @classmethod

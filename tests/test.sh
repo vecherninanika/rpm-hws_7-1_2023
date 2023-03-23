@@ -43,7 +43,7 @@ echo "token $token"
 post_code=`curl -s -o /dev/null \
     -X POST \
     -d '{"name": "a1b2c3d4", "age": 1}' \
-    -H "Authorization:admin {$token}"\
+    -H "Authorization:admin $token"\
     -w %{http_code} \
     http://127.0.0.1:8001/examples`
 

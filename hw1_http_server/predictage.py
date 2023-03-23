@@ -8,7 +8,7 @@ def predictage(query: dict) -> dict:
         'name': 'Unable to get name from query, defaults to Matthew',
         'age': None,
         'count': None
-        }
+                 }
     try:
         name = query.get('name')
     except Exception:
