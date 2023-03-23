@@ -2,7 +2,9 @@
 
 # set env variables
 python3.10 tests/setup_env.py
-mv .env ../hw1_http_server/
+mv .env ../
+cd ..
+mv .env hw1_http_server/
 
 # set up database
 python3.10 tests/setup_db.py
