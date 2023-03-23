@@ -77,8 +77,9 @@ class CustomHandler(BaseHTTPRequestHandler):
                     return NOT_IMPLEMENTED, f'Examples do not have attribute: {attr}'
             if all([req_attr in request_data for req_attr in EXAMPLES_REQ_ATTRS]):
                 if DbHandler.insert(request_data):
-                    return CREATED, f'{self.command} OK'
-                return BAD_REQUEST, f'{self.command} FAIL'
+                    ans = CREATED, f'{self.command} OK'
+                ans = BAD_REQUEST, f'{self.command} FAIL'
+                return ans
             return BAD_REQUEST, f'Required keys to add: {EXAMPLES_REQ_ATTRS}'
         return NO_CONTENT, f'Request data for {self.command} not found'
 
@@ -121,7 +122,7 @@ class CustomHandler(BaseHTTPRequestHandler):
             'POST': self.post,
             'PUT': self.put,
             'DELETE': self.delete
-            }
+        }
         if self.command == 'GET':
             self.get()
             return
