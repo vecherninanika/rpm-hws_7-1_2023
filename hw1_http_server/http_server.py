@@ -78,7 +78,8 @@ class CustomHandler(BaseHTTPRequestHandler):
             if all([req_attr in request_data for req_attr in EXAMPLES_REQ_ATTRS]):
                 if DbHandler.insert(request_data):
                     ans = CREATED, f'{self.command} OK'
-                ans = BAD_REQUEST, f'{self.command} FAIL'
+                else:
+                    ans = BAD_REQUEST, f'{self.command} FAIL'
                 return ans
             return BAD_REQUEST, f'Required keys to add: {EXAMPLES_REQ_ATTRS}'
         return NO_CONTENT, f'Request data for {self.command} not found'
