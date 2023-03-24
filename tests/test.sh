@@ -39,7 +39,6 @@ check_code $get_code $OK
 
 echo "POST request:"
 
-echo "token $token"
 post_code=`curl -s -o /dev/null \
     -X POST \
     -d '{"name": "a1b2c3d4", "age": 1}' \

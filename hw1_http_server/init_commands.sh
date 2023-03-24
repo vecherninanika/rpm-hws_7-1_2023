@@ -11,4 +11,5 @@ docker run -d --name names_hw1 -p 5432:5432 \
 
 sleep 2
 
+export PGPASSWORD=change_me
 psql -h 127.0.0.1 -p 5432 -U sirius_2023 -d names_hw1 -f init_commands.ddl
