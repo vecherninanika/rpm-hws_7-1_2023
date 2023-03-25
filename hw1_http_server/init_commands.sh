@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pip install -r requirements/requirements.txt
+pip install -r requirements.txt
 
 docker run -d --name names_hw1 -p 5432:5432 \
  -v $HOME/DATABASES/names_hw1:/var/lib/postresql/names_hw1 \
