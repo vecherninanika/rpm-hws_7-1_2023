@@ -67,9 +67,9 @@ class CustomHandler(BaseHTTPRequestHandler):
             return json.loads(self.rfile.read(content_length).decode())
         return {}
 
-    def post(self) -> tuple:
+    def post(self, request_data) -> tuple:
         if self.path.startswith(EXAMPLES):
-            request_data = self.get_request_json()
+            request_data = self.get_request_json() if not request_data else request_data
             if not request_data:
                 return BAD_REQUEST, f'No request data provided by {self.command}'
             for attr in request_data.keys():
