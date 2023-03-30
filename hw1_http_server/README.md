@@ -12,7 +12,7 @@
 
 # examples of requests in Postman: 
 
-- In Headers: key - "Authorization", value - "admin e71da913-37d1-4739-a48d-a6bd1e15b250" (without quotation marks)
+- In Headers: key - "Authorization", value - "admin a1b2c3d4-a1b2-c3d4-e5f6-a1b2c3a1b2c3" (without quotation marks)
 - GET: 127.0.0.1:8001/examples
 - POST: 127.0.0.1:8001/examples
 -       In body, raw: {"name": "Lera"}
