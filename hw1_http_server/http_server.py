@@ -115,6 +115,7 @@ class CustomHandler(BaseHTTPRequestHandler):
     def authorization(self) -> bool:
         get_from_headers = self.headers.get(AUTH, '').split()
         if len(get_from_headers) == 2:
+            print(get_from_headers[0], get_from_headers[1])
             return DbHandler.is_valid_token(get_from_headers[0], get_from_headers[1])
         return False
 
