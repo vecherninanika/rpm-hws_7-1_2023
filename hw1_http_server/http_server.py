@@ -77,7 +77,9 @@ class CustomHandler(BaseHTTPRequestHandler):
                     return NOT_IMPLEMENTED, f'Examples do not have attribute: {attr}'
             if all([req_attr in request_data for req_attr in EXAMPLES_REQ_ATTRS]):
                 if DbHandler.insert(request_data):
-                    ans = CREATED, f'{self.command} OK'
+                    attrs = '&'.join([f'{key}={value}' for key, value in request_data.items()])
+                    link = f'127.0.0.1:8001/examples?{attrs}'
+                    ans = CREATED, f'{self.command} OK\nAdded: {link}'
                 else:
                     ans = BAD_REQUEST, f'{self.command} FAIL'
                 return ans
@@ -101,7 +103,11 @@ class CustomHandler(BaseHTTPRequestHandler):
                 return BAD_REQUEST, f'{self.command} error: {error}'
             if not execute_command:
                 return self.post()
-            return OK, f'{self.command} OK'
+            attrs_from_request_data = [f'{key}={value}' for key, value in request_data.items()]
+            attrs_from_query = [f'{key}={value}' for key, value in query.items()]
+            attrs = '&'.join(attrs_from_query) + '&' + '&'.join(attrs_from_request_data)
+            link = f'127.0.0.1:8001/examples?{attrs}'
+            return OK, f'{self.command} OK.\nSee changes at: {link}'
 
     def delete(self) -> tuple:
         if self.path.startswith(EXAMPLES):
@@ -115,7 +121,6 @@ class CustomHandler(BaseHTTPRequestHandler):
     def authorization(self) -> bool:
         get_from_headers = self.headers.get(AUTH, '').split()
         if len(get_from_headers) == 2:
-            print(get_from_headers[0], get_from_headers[1])
             return DbHandler.is_valid_token(get_from_headers[0], get_from_headers[1])
         return False
 
