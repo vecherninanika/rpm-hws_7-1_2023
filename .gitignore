@@ -1,2 +1,2 @@
-*branches.sh
-*students*
+*__pycache__*
+*.env*

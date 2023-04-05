@@ -67,24 +67,24 @@ class CustomHandler(BaseHTTPRequestHandler):
             return json.loads(self.rfile.read(content_length).decode())
         return {}
 
-    def post(self) -> tuple:
+    def post(self, data_from_put=None, msg='') -> tuple:
         if self.path.startswith(EXAMPLES):
-            request_data = self.get_request_json()
+            request_data = self.get_request_json() if not data_from_put else data_from_put
             if not request_data:
-                return BAD_REQUEST, f'No request data provided by {self.command}'
+                return BAD_REQUEST, f'{msg}No request data provided by {self.command}'
             for attr in request_data.keys():
                 if attr not in EXAMPLES_ATTRS:
-                    return NOT_IMPLEMENTED, f'Examples do not have attribute: {attr}'
+                    return NOT_IMPLEMENTED, f'{msg}Examples do not have attribute: {attr}'
             if all([req_attr in request_data for req_attr in EXAMPLES_REQ_ATTRS]):
                 if DbHandler.insert(request_data):
                     attrs = '&'.join([f'{key}={value}' for key, value in request_data.items()])
                     link = f'127.0.0.1:8001/examples?{attrs}'
-                    ans = CREATED, f'{self.command} OK\nAdded: {link}'
+                    ans = CREATED, f'{msg}{self.command} OK\nAdded: {link}'
                 else:
-                    ans = BAD_REQUEST, f'{self.command} FAIL'
+                    ans = BAD_REQUEST, f'{msg}{self.command} FAIL'
                 return ans
-            return BAD_REQUEST, f'Required keys to add: {EXAMPLES_REQ_ATTRS}'
-        return NO_CONTENT, f'Request data for {self.command} not found'
+            return BAD_REQUEST, f'{msg}Required keys to add: {EXAMPLES_REQ_ATTRS}'
+        return NO_CONTENT, f'{msg}Request data for {self.command} not found'
 
     def put(self) -> tuple:
         if self.path.startswith(EXAMPLES):
@@ -102,7 +102,8 @@ class CustomHandler(BaseHTTPRequestHandler):
                 print(f'{self.command} error: {error}')
                 return BAD_REQUEST, f'{self.command} error: {error}'
             if not execute_command:
-                return self.post()
+                msg = 'Could not find data to change. '
+                return self.post(request_data, msg)
             attrs_from_request_data = [f'{key}={value}' for key, value in request_data.items()]
             attrs_from_query = [f'{key}={value}' for key, value in query.items()]
             attrs = '&'.join(attrs_from_query) + '&' + '&'.join(attrs_from_request_data)
