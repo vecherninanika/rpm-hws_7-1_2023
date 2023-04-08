@@ -30,7 +30,7 @@ class InvalidQuery(Exception):
 
 
 class DbHandler:
-    """Class that sends queries to database."""
+    """Class which sends queries to database."""
 
     db_connection = psycopg2.connect(
         dbname=PG_DBNAME,
@@ -44,8 +44,9 @@ class DbHandler:
     @classmethod
     def get_data(cls, req_conds: dict = None) -> dict:
         cls.db_cursor.execute(DbHandler.query_request(SELECTOR, req_conds) if req_conds else SELECTOR)
-        examples = cls.db_cursor.fetchall()
-        examples = [example[1:] for example in examples]  # чтобы на сайт не выводит id
+        examples_with_id = cls.db_cursor.fetchall()
+        print('examples_with_id', examples_with_id)
+        examples = [example[1:] for example in examples_with_id]  # чтобы на сайт не выводил id
         return {
             'names': list_to_view(examples),
             'count': len(examples)
@@ -86,33 +87,33 @@ class DbHandler:
             if data_key == 'age' and data[data_key] < 0:
                 raise InvalidQuery('Age should be more than zero!')
             if is_num(data[data_key]):
-                to_join.append(f"{data_key}={data[data_key]}")
+                to_join.append(f"{data_key}={data_key}")
             else:
                 to_join.append(f"{data_key}='{data[data_key]}'")
         req = ', '.join(to_join)
-        try:
-            cls.db_cursor.execute(cls.query_request(UPDATE.format(request=req), where))
-        except Exception:
-            return False    # это вроде правильно. Чтобы перекидывал на PUT
+        # try:
+        #     cls.db_cursor.execute(cls.query_request(UPDATE.format(request=req), where))
+        # except Exception as error:
+        #     return f'{__name__} error: {error}'
+        cls.db_cursor.execute(cls.query_request(UPDATE.format(request=req), where))
         cls.db_connection.commit()
-        return cls.db_cursor.fetchone()[0]
+        return cls.db_cursor.fetchone()     #
 
     @classmethod
     def insert(cls, examples_data: dict) -> bool:
         try:
             cls.db_cursor.execute(cls.compose_insert(examples_data))
-            cls.db_connection.commit()
-            return cls.db_cursor.fetchone()[0]   # в try засунула, потому что тут может быть ошибка None[0]
         except Exception as error:
-            print(f'{__name__} error: {error}')
-            return False
+            return f'{__name__} error: {error}'
+        cls.db_connection.commit()
+        return cls.db_cursor.fetchone()[0]
 
     @classmethod
     def delete(cls, req_conds: dict) -> bool:
         try:
             cls.db_cursor.execute(cls.query_request(DELETE, req_conds))
         except Exception as error:
-            print(f'{__name__} error: {error}')
+            print(f'{__name__} error: {error}')      #
             return False
         cls.db_connection.commit()
         return bool(cls.db_cursor.rowcount)
@@ -123,8 +124,5 @@ class DbHandler:
         for attr, value in req_conds.items():
             to_add = f'{attr}={value}' if isinstance(value, (int, float)) else f"{attr}='{value}'"
             conditions.append(to_add)
-        if request.startswith('UPDATE'):
-            cmd = '{0} WHERE {1} returning id'.format(request, ' AND '.join(conditions))
-        else:
-            cmd = '{0} WHERE {1}'.format(request, ' AND '.join(conditions))
-        return cmd
+        print('{0} WHERE {1} returning id'.format(request, ' AND '.join(conditions)))
+        return '{0} WHERE {1} returning id'.format(request, ' AND '.join(conditions))

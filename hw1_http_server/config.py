@@ -36,10 +36,10 @@ NOT_IMPLEMENTED = 501
 # db requests
 SELECTOR = 'SELECT * FROM examples'
 GET_TOKEN = "SELECT token FROM token WHERE username='{username}'"
-INSERT = 'INSERT INTO examples ({keys}) VALUES ({values})'
+INSERT = 'INSERT INTO examples ({keys}) VALUES ({values}) returning id'
 UPDATE = 'UPDATE examples SET {request}'
 DELETE = 'DELETE FROM examples '
-EXAMPLES_ATTRS = ('name', 'age')
+EXAMPLES_ATTRS = ('id', 'name', 'age')
 EXAMPLES_REQ_ATTRS = ('name',)
 PREDICTAGE_ATTRS = ('name',)
 

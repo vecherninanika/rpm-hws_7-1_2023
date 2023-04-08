@@ -67,7 +67,7 @@ class CustomHandler(BaseHTTPRequestHandler):
             return json.loads(self.rfile.read(content_length).decode())
         return {}
 
-    def post(self, data_from_put=None, msg='') -> tuple: 
+    def post(self, data_from_put=None, msg='') -> tuple:
         if self.path.startswith(EXAMPLES):
             request_data = self.get_request_json() if not data_from_put else data_from_put
             if not request_data:
@@ -77,35 +77,38 @@ class CustomHandler(BaseHTTPRequestHandler):
                     return NOT_IMPLEMENTED, f'{msg}Examples do not have attribute: {attr}'
             if all([req_attr in request_data for req_attr in EXAMPLES_REQ_ATTRS]):
                 insert_res = DbHandler.insert(request_data)
-                if insert_res:
+                if insert_res.startswith('dbhandler error'):   #
+                    ans = BAD_REQUEST, f'{msg}{self.command} FAIL\n{insert_res}'   #
+                else:
                     link = f'127.0.0.1:8001/examples?id={insert_res}'
                     ans = CREATED, f'{msg}{self.command} OK\nAdded: {link}'
-                else:
-                    ans = BAD_REQUEST, f'{msg}{self.command} FAIL'
                 return ans
             return BAD_REQUEST, f'{msg}Required keys to add: {EXAMPLES_REQ_ATTRS}'
         return NO_CONTENT, f'{msg}Request data for {self.command} not found'
 
-    def put(self) -> tuple:    
+    def put(self) -> tuple:
         if self.path.startswith(EXAMPLES):
             request_data = self.get_request_json()
             if not request_data:
                 return BAD_REQUEST, f'No request data provided by {self.command}'
             query = self.parse_query()
+            print('query', query)
             if query:
                 not_possible = list(filter(lambda attr: attr not in EXAMPLES_ATTRS, query.keys()))
                 if not_possible:
                     return NOT_IMPLEMENTED, f'students do not have attributes: {not_possible}'
-            try:
-                update_res = DbHandler.update(where=query, data=request_data)
-            except Exception as error:
-                return BAD_REQUEST, f'{self.command} error: {error}'
+            # try:
+            #     update_res = DbHandler.update(where=query, data=request_data)
+            # except Exception as error:
+            #     return BAD_REQUEST, f'{self.command} error: {error}'    #
+            update_res = DbHandler.update(where=query, data=request_data)
             if not update_res:
                 msg = 'Could not find data to change. Trying to create new data. '
-                request_data.update(query)
-                print(request_data)
                 return self.post(request_data, msg)
-            link = f'127.0.0.1:8001/examples?id={update_res}'
+            if update_res.startswith('dbhandler error'):     #
+                return BAD_REQUEST, f'{self.command} FAIL\n{update_res}'   #
+            else:
+                link = f'127.0.0.1:8001/examples?id={update_res}'
             return OK, f'{self.command} OK.\nSee changes at: {link}'
 
     def delete(self) -> tuple:
