@@ -78,17 +78,17 @@ class DbHandler:
     @classmethod
     def update(cls, data: dict, where: dict) -> bool:
         to_join = []
-        for data_key in data.keys():
-            if data_key == 'name' and str(data[data_key]).isdigit():
+        for data_key, data_val in data.items():
+            if data_key == 'name' and str(data_val).isdigit():
                 raise InvalidQuery('Name should not be a number')
-            if data_key == 'age' and not str(data[data_key]).isdigit():
+            if data_key == 'age' and not str(data_val).isdigit():
                 raise InvalidQuery('Age should be a number!')
-            if data_key == 'age' and data[data_key] < 0:
+            if data_key == 'age' and data_val < 0:
                 raise InvalidQuery('Age should be more than zero!')
-            if is_num(data[data_key]):
-                to_join.append(f"{data_key}={data[data_key]}")
+            if is_num(data_val):
+                to_join.append(f"{data_key}={data_val}")
             else:
-                to_join.append(f"{data_key}='{data[data_key]}'")
+                to_join.append(f"{data_key}='{data_val}'")
         req = ', '.join(to_join)
         try:
             cls.db_cursor.execute(cls.query_request(UPDATE.format(request=req), where))
@@ -99,13 +99,9 @@ class DbHandler:
 
     @classmethod
     def insert(cls, examples_data: dict) -> bool:
-        try:
-            cls.db_cursor.execute(cls.compose_insert(examples_data))
-            cls.db_connection.commit()
-            return cls.db_cursor.fetchone()[0]   # в try засунула, потому что тут может быть ошибка None[0]
-        except Exception as error:
-            print(f'{__name__} error: {error}')
-            return False
+        cls.db_cursor.execute(cls.compose_insert(examples_data))
+        cls.db_connection.commit()
+        return cls.db_cursor.fetchone()[0]
 
     @classmethod
     def delete(cls, req_conds: dict) -> bool:
