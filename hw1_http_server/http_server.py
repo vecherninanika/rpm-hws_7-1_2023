@@ -78,10 +78,12 @@ class CustomHandler(BaseHTTPRequestHandler):
             if all([req_attr in request_data for req_attr in EXAMPLES_REQ_ATTRS]):
                 try:
                     insert_res = DbHandler.insert(request_data)
-                except Exception:
-                    return BAD_REQUEST, f'{msg}{self.command} FAIL'
-                link = f'127.0.0.1:8001/examples?id={insert_res}'
-                return CREATED, f'{msg}{self.command} OK\nAdded: {link}'
+                except Exception as error:
+                    res = BAD_REQUEST, f'{msg}{self.command} FAIL. {error}'
+                else:
+                    link = f'127.0.0.1:8001/examples?id={insert_res}'
+                    res = CREATED, f'{msg}{self.command} OK\nAdded: {link}'
+                return res
             return BAD_REQUEST, f'{msg}Required keys to add: {EXAMPLES_REQ_ATTRS}'
         return NO_CONTENT, f'{msg}Request data for {self.command} not found'
 

@@ -99,10 +99,10 @@ class DbHandler:
             return False    # это вроде правильно. Чтобы перекидывал на PUT
         cls.db_connection.commit()
         try:
-            id = cls.db_cursor.fetchone()[0]
+            person_id = cls.db_cursor.fetchone()[0]
         except Exception:
             return False
-        return id
+        return person_id
 
     @classmethod
     def insert(cls, examples_data: dict) -> bool:
