@@ -53,8 +53,11 @@ class DbHandler:
 
     @classmethod
     def is_valid_token(cls, username: str, req_token: str) -> bool:
-
-        cls.db_cursor.execute(GET_TOKEN.format(username=username))
+        try:
+            cls.db_cursor.execute(GET_TOKEN.format(username=username))
+        except Exception as error:
+            print(f'{__name__} error: {error}')
+            return False
         db_token = cls.db_cursor.fetchone()
         if db_token:
             return db_token[0] == req_token
@@ -95,7 +98,11 @@ class DbHandler:
         except Exception:
             return False    # это вроде правильно. Чтобы перекидывал на PUT
         cls.db_connection.commit()
-        return cls.db_cursor.fetchone()[0]
+        try:
+            id = cls.db_cursor.fetchone()[0]
+        except Exception:
+            return False
+        return id
 
     @classmethod
     def insert(cls, examples_data: dict) -> bool:
