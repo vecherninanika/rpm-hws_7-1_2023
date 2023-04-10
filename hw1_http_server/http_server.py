@@ -100,13 +100,15 @@ class CustomHandler(BaseHTTPRequestHandler):
             try:
                 update_res = DbHandler.update(where=query, data=request_data)
             except Exception as error:
-                return BAD_REQUEST, f'{self.command} error: {error}'
-            if not update_res:
-                msg = 'Could not find data to change. '
-                request_data.update(query)
-                return self.post(request_data, msg)
-            link = f'127.0.0.1:8001/examples?id={update_res}'
-            return OK, f'{self.command} OK.\nSee changes at: {link}'
+                res = BAD_REQUEST, f'{self.command} error: {error}'
+            else:
+                if not update_res:
+                    msg = 'Could not find data to change. '
+                    request_data.update(query)
+                    res = self.post(request_data, msg)
+                link = f'127.0.0.1:8001/examples?id={update_res}'
+                res = OK, f'{self.command} OK.\nSee changes at: {link}'
+                return res
         return NO_CONTENT, f'Request data for {self.command} not found'
 
     def delete(self) -> tuple:
