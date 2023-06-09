@@ -1,8 +1,6 @@
-CREATE EXTENSION "uuid-ossp";
-
 CREATE TABLE IF NOT EXISTS token (username text primary key, token uuid);
 
-CREATE TABLE examples (id uuid primary key default uuid_generate_v4(),
+CREATE TABLE IF NOT EXISTS examples (id uuid primary key default uuid_generate_v4(),
                        name text not null,
                        age int);
 
