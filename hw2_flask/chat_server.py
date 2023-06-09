@@ -92,8 +92,7 @@ def new_client(client: socket, cl_address: tuple) -> str:
                 if name in users.keys():
                     client.send(encode('Username is taken'))
                 elif is_banned(name):
-                    client.send(
-                        encode('You were permanently banned for a while'))
+                    client.send(encode('You were permanently banned for a while'))
                     client.close()
                     return
                 else:
@@ -108,8 +107,7 @@ def accept_client(server: socket):
     while True:
         client, cl_address = server.accept()
         print(f'Client connected from {cl_address}')
-        Thread(target=new_client, args=(
-            client, cl_address), daemon=True).start()
+        Thread(target=new_client, args=(client, cl_address), daemon=True).start()
 
 
 def main(server: socket) -> None:
@@ -128,8 +126,9 @@ if __name__ == '__main__':
     users: dict = {}
     users_lock = Lock()
     server = socket()
-    connection = connect(dbname=PG_DBNAME, host=PG_HOST,
-                         port=PG_PORT, user=PG_USER, password=PG_PASSWORD)
+    connection = connect(
+        dbname=PG_DBNAME, host=PG_HOST, port=PG_PORT, user=PG_USER, password=PG_PASSWORD
+    )
     db_cursor = connection.cursor()
     try:
         main(server)

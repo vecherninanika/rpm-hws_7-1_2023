@@ -17,7 +17,8 @@ PG_HOST = getenv('PG_HOST')
 PG_PORT = getenv('PG_PORT')
 PG_DBNAME = getenv('PG_DBNAME')
 MESSAGES_FROM_DB = getenv('MESSAGES_FROM_DB')
-
+FLASK_PORT = getenv('FLASK_PORT')
+FLASK_ADDRESS = getenv('FLASK_ADDRESS')
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 clients = {}
@@ -31,7 +32,8 @@ def mainpage():
             session_user = session['username']
             clients[session_user] = socket()
             answer = chat_client.auth(
-                session['username'], clients[session_user])
+                session['username'], clients[session_user]
+            )
             if not answer:
                 return redirect(url_for('chat'))
         else:
@@ -50,8 +52,8 @@ def logout():
 
 @app.route("/chat", methods=['GET', 'POST'])
 def chat():
-    if 'username' in session:
-        client = session['username']
+    client = session.get('username')
+    if client:
         print(client)
         if request.method == 'POST':
             message = request.form['message']
@@ -60,13 +62,13 @@ def chat():
             if message:
                 client_socket = clients.get(client)
                 if client_socket:
-                    Thread(target=chat_client.main, args=(
-                        message, client_socket)).start()
+                    Thread(target=chat_client.main, args=(message, client_socket)).start()
                 else:
                     print('No client socket')
                     return redirect(url_for('mainpage'))
-        connection = connect(dbname=PG_DBNAME, host=PG_HOST,
-                             port=PG_PORT, user=PG_USER, password=PG_PASSWORD)
+        connection = connect(
+            dbname=PG_DBNAME, host=PG_HOST, port=PG_PORT, user=PG_USER, password=PG_PASSWORD
+        )
         cursor = connection.cursor()
         sleep(1)
         cursor.execute(MESSAGES_FROM_DB)
@@ -76,6 +78,5 @@ def chat():
         return render_template(CHAT_HTML, messages=all_messages)
     return redirect(url_for('register'))
 
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host=FLASK_ADDRESS, port=FLASK_PORT)
