@@ -78,5 +78,6 @@ def chat():
         return render_template(CHAT_HTML, messages=all_messages)
     return redirect(url_for('register'))
 
+
 if __name__ == '__main__':
     app.run(host=FLASK_ADDRESS, port=FLASK_PORT)
