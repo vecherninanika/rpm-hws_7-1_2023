@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <title>{% block title %}Chat{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/registration.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/messages.css') }}">
+  <script src="{{ url_for('static', filename='js/request.js') }}" type="module"></script>
+</head>
+
+<body>
+  {% block sidebar %}
+  <ul class="sidebar-nav">
+    <li><a href="{{ url_for('mainpage')}}">Homepage</a></li>
+  </ul>
+  {% endblock %}
+  {% block content %}{% endblock %}
+</body>
+
+</html>

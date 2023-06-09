@@ -1,0 +1,31 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<h1>Home Page</h1>
+
+<p>Welcome to <em>chat</em>, a very basic Flask website.</p>
+
+<div class="person-create-card">
+  <h2>
+    Type your name to enter the chat
+</h2>
+<!-- <form method="post">
+    <p><input type=text name=username>
+    <p><input type=submit value=Login>
+</form> -->
+<br><br>
+
+<form method="post">
+    <label>
+        <span>Username</span>
+        <input name="username" type="text" value="" />
+    </label>
+    <button data-action="create">✨ Enter the chat</button>
+</form>
+
+{% if message %}
+<h5>{{ message }}</h5>
+{% endif %}
+</div>
+
+
+{% endblock %}
