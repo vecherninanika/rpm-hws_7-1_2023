@@ -9,7 +9,6 @@ python3.10 tests/setup_db.py
 # server start
 echo "Starting the server"
 # cd hw1_http_server/
-cd ..
 python3.10 main.py &
 
 # real tests
