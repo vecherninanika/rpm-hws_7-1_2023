@@ -43,7 +43,7 @@ jobs:
     - name: Тесты bash-curl
       run: |
         chmod +x hw1_http_server/tests/test.sh
-        .hw1_http_server/tests/test.sh
+        ./hw1_http_server/tests/test.sh
     - name: Тесты python-requests
       run: |
         pytest hw1_http_server/tests/test_requests.py
