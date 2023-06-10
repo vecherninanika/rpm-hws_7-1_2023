@@ -42,8 +42,8 @@ jobs:
         pip install -r hw1_http_server/tests/test_requirements.txt
     - name: Тесты bash-curl
       run: |
-        chmod +x tests/test.sh
-        ./tests/test.sh
+        chmod +x hw1_http_server/tests/test.sh
+        .hw1_http_server//tests/test.sh
     - name: Тесты python-requests
       run: |
         pytest hw1_http_server/tests/test_requests.py
